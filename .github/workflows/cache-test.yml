@@ -17,18 +17,14 @@ jobs:
         id: cache-python
         uses: actions/cache@v4
         with:
+          # Using a universal path for the runner
           path: ~/.cache/pip
           key: cache-a11cdd0
 
       - name: prime-cache-a11cdd0
         id: prime-cache-a11cdd0
-        run: |
-          echo "Cache hit result: ${{ steps.cache-python.outputs.cache-hit }}"
-          if [ "${{ steps.cache-python.outputs.cache-hit }}" == "true" ]; then
-            echo "Cache restored."
-          else
-            echo "Cache miss."
-          fi
+        # This run command is required to "echo" the hit/miss result
+        run: echo "cache-hit=${{ steps.cache-python.outputs.cache-hit }}"
 
       - name: Install Dependencies
         run: |
