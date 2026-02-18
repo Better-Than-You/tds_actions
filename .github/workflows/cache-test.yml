@@ -1,0 +1,41 @@
+name: Cache Prime Test
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  cache-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Cache Dependencies
+        id: cache-python
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: cache-a11cdd0
+
+      - name: prime-cache-a11cdd0
+        run: |
+          echo "Cache hit: ${{ steps.cache-python.outputs.cache-hit }}"
+          if [ "${{ steps.cache-python.outputs.cache-hit }}" == "true" ]; then
+            echo "Result: Cache was restored successfully."
+          else
+            echo "Result: Cache miss. Dependencies will be cached after the run."
+          fi
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Example dependency for your data science projects
+          pip install pandas scikit-learn
